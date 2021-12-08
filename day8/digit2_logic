@@ -1,0 +1,56 @@
+# step 1
+# ds :digit -> segment
+# a and g appear in every number, find them by aggreate all numbers
+# if appearance == 10 and there are only 2, then a and g
+# remove them
+
+ds = dict()
+ds[0] = "abcefg"
+ds[2] = "acdeg"
+ds[3] = "acdfg"
+ds[5] = "abdfg"
+ds[6] = "abdefg"
+ds[9] = "abcdfg"
+
+# d is only missing in 0
+# remove 0 by find segment d that appeared 3 times among 3 seg digits
+
+ds[0] = "bcef"
+ds[2] = "cde"
+ds[3] = "cdf"
+ds[5] = "bdf"
+ds[6] = "bdef"
+ds[9] = "bcdf"
+
+# step 2
+# b, f appears both in 6 9
+# b, e appear once in 2 3 5
+# c, f appear twice in 2 3 5
+# d appear in every number, remove
+# mapping found so far d
+ds[2] = "cde"
+ds[3] = "cdf"
+ds[5] = "bdf"
+ds[6] = "bdef"
+ds[9] = "bcdf"
+
+# step 3
+# c3 (c appeared 3 times) e2 f4 b3, found e and f, remove 2 amd 6 which only has e in their length
+# mapping found so far d, e, f
+ds[2] = "ce"
+ds[3] = "cf"
+ds[5] = "bf"
+ds[6] = "bef"
+ds[9] = "bcf"
+
+# step4
+# the only one left of length 3 is 9, the common segment between 3 and 5 is f
+# mapping found so far d, e, f
+ds[3] = "cf"
+ds[5] = "bf"
+ds[9] = "bcf"
+
+# distinguish c and b by checking their number of appearance in step 2. 
+# mapping found so far d, e, f, c, b
+ds[3] = "c"
+ds[5] = "b"
