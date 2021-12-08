@@ -1,35 +1,23 @@
-def count(arr):
-    counter = dict()
-    for c in "".join(arr):
-        if c in counter:
-            counter[c]+=1
-        else:
-            counter[c] = 1
-    return counter
+from collections import Counter
 
 def remove(arr, ag):
     filtered = list(map(lambda num: ''.join(set(num) - set(ag)), arr))
     return filtered
 
-def findmappings(og):
+def findmappings(arr):
     mapping = dict()
-    arr = og
 
     # find easy four
     arr = list(filter(lambda num: len(num) not in set([2,3,4,7]) , arr))
     
     # remove a and g
-    counter = count(arr)
-    ag = list()
-    for key, val in counter.items():
-        if val == len(arr):
-            ag.append(key) # a or g
-    #print("ag", ag)
+    counter = Counter(''.join(arr))
+    ag = list(map(lambda p: p[0],filter(lambda kv: kv[1] == len(arr) , counter.items())))
     arr = remove(arr, ag)
     
     # find d among length 3, remove d
     len3 = list(filter(lambda num: len(num) == 3, arr))
-    clen3 = count(len3)
+    clen3 = Counter(''.join(len3))
     for key, val in clen3.items():
         if val == len(len3):
             mapping['d'] = key
@@ -40,7 +28,7 @@ def findmappings(og):
     arr = list(filter(lambda num: len(num)!= 7 - len(mapping) - 2, arr))
 
     # c3 (c appeared 3 times) e2 f4 b3, found e and f, remove 2 amd 6 which only has e in their length
-    counter = count(arr)
+    counter = Counter(''.join(arr))
     for key, val in counter.items():
         if val == 2:
             mapping['e'] = key
@@ -55,11 +43,9 @@ def findmappings(og):
     # distinguish c and b by checking their number of appearance in step 2. 
     arr = remove(arr, [mapping['f']])
     if clen3[arr[0]] == 1:
-        mapping['b'] = arr[0] 
-        mapping['c'] = arr[1]
+        mapping['b'], mapping['c'] = arr[0], arr[1]
     else:
-        mapping['b'] = arr[1] 
-        mapping['c'] = arr[0]
+        mapping['b'], mapping['c'] = arr[1], arr[0]
 
     return mapping
 
@@ -81,7 +67,6 @@ for line in data:
     #print(reverse)
     out = 0
     for f in four:
-        i = -1
         if len(f) in easy:
             i = easy[len(f)]
         else:
@@ -91,6 +76,6 @@ for line in data:
                     decoded += reverse[c]
             i = sd[''.join(sorted(decoded))]
         out = out*10 + i
-    print(out)
+    #print(out)
     total+=out
 print(total)
