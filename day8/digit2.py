@@ -7,19 +7,14 @@ def count(arr):
             counter[c] = 1
     return counter
 
-def replace(num, ag):
-    for r in ag:
-        num = num.replace(r, "")
-    return num
-
 def remove(arr, ag):
-    filtered = list(map(lambda num: replace(num, ag), arr))
+    filtered = list(map(lambda num: ''.join(set(num) - set(ag)), arr))
     return filtered
 
 def findmappings(og):
     mapping = dict()
     arr = og
-    
+
     # find easy four
     arr = list(filter(lambda num: len(num) not in set([2,3,4,7]) , arr))
     
@@ -82,7 +77,7 @@ for line in data:
     mapping = findmappings(ten)
     reverse = dict()
     for key, val in mapping.items():
-        reverse["".join(sorted(val))] = key
+        reverse[''.join(sorted(val))] = key
     #print(reverse)
     out = 0
     for f in four:
@@ -94,7 +89,7 @@ for line in data:
             for c in f:
                 if c in reverse:
                     decoded += reverse[c]
-            i = sd["".join(sorted(decoded))]
+            i = sd[''.join(sorted(decoded))]
         out = out*10 + i
     print(out)
     total+=out
