@@ -1,32 +1,28 @@
 def count(arr):
     counter = dict()
-    for num in arr:
-        for c in num:
-            if c in counter:
-                counter[c]+=1
-            else:
-                counter[c] = 1
+    for c in "".join(arr):
+        if c in counter:
+            counter[c]+=1
+        else:
+            counter[c] = 1
     return counter
 
+def replace(num, ag):
+    for r in ag:
+        num = num.replace(r, "")
+    return num
+
 def remove(arr, ag):
-    filtered = list()
-    for num in arr:
-        for r in ag:
-            num = num.replace(r, "")
-        filtered.append(num)
+    filtered = list(map(lambda num: replace(num, ag), arr))
     return filtered
 
 def findmappings(og):
     mapping = dict()
-    filtered = list()
     arr = og
-
+    
     # find easy four
-    for num in arr:
-        if len(num) not in set([2,3,4,7]):
-            filtered.append(num)
-    arr = filtered
-
+    arr = list(filter(lambda num: len(num) not in set([2,3,4,7]) , arr))
+    
     # remove a and g
     counter = count(arr)
     ag = list()
@@ -37,10 +33,7 @@ def findmappings(og):
     arr = remove(arr, ag)
     
     # find d among length 3, remove d
-    len3 = list()
-    for num in arr:
-        if len(num) == 3:
-            len3.append(num)
+    len3 = list(filter(lambda num: len(num) == 3, arr))
     clen3 = count(len3)
     for key, val in clen3.items():
         if val == len(len3):
@@ -49,11 +42,7 @@ def findmappings(og):
             break
 
     # remove 0 which is the longest str from arr
-    filtered = list()
-    for num in arr:
-        if len(num)!= 7 - len(mapping) - 2:
-            filtered.append(num)
-    arr = filtered
+    arr = list(filter(lambda num: len(num)!= 7 - len(mapping) - 2, arr))
 
     # c3 (c appeared 3 times) e2 f4 b3, found e and f, remove 2 amd 6 which only has e in their length
     counter = count(arr)
@@ -65,11 +54,7 @@ def findmappings(og):
 
     # the only one left of length 3 is 9, the common segment between 3 and 5 is f
     # remove 2 and 6
-    filtered = list()
-    for num in arr:
-        if mapping['e'] not in num and len(num)!=3:
-            filtered.append(num)
-    arr = filtered
+    arr = list(filter(lambda num: mapping['e'] not in num and len(num)!=3, arr))
 
     # remove f
     # distinguish c and b by checking their number of appearance in step 2. 
@@ -83,45 +68,34 @@ def findmappings(og):
 
     return mapping
 
-
 with open("day8/input.txt", "r") as file:
     data = file.readlines()
 
-easy = dict()
-easy[2] = 1
-easy[3] = 7
-easy[4] = 4
-easy[7] = 8
-
-sd = dict()
-sd["bcef"] = 0
-sd["cde"] = 2
-sd["cdf"] = 3
-sd["bdf"]= 5
-sd["bdef"] = 6
-sd["bcdf"] = 9
+easy = dict({2:1, 3:7, 4:4, 7:8})
+# map segment pattern to digit
+sd = dict({"bcef": 0, "cde":2, "cdf": 3, "bdf": 5, "bdef": 6, "bcdf":9})
 
 total = 0
 for line in data:
     sl = line.split("|") 
-    ten = sl[0].split()
-    four = sl[1].split()
+    ten, four = sl[0].split(), sl[1].split()
     mapping = findmappings(ten)
     reverse = dict()
     for key, val in mapping.items():
         reverse["".join(sorted(val))] = key
     #print(reverse)
-    out = ""
+    out = 0
     for f in four:
+        i = -1
         if len(f) in easy:
-            out+=str(easy[len(f)])
+            i = easy[len(f)]
         else:
             decoded = ""
             for c in f:
                 if c in reverse:
                     decoded += reverse[c]
-            out+= str(sd["".join(sorted(decoded))])
-    
+            i = sd["".join(sorted(decoded))]
+        out = out*10 + i
     print(out)
-    total+=int(out)
+    total+=out
 print(total)
