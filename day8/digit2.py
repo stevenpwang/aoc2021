@@ -18,22 +18,16 @@ def findmappings(arr):
     # find d among length 3, remove d
     len3 = list(filter(lambda num: len(num) == 3, arr))
     clen3 = Counter(''.join(len3))
-    for key, val in clen3.items():
-        if val == len(len3):
-            mapping['d'] = key
-            arr = remove(arr, [key])
-            break
+    mapping['d'] = list(filter(lambda kv: kv[1] == len(len3), clen3.items()))[0][0]
+    arr = remove(arr, [mapping['d']])
 
-    # remove 0 which is the longest str from arr
+    # remove 0 which is the longest str from arr, 7 segments, 2 are a and g
     arr = list(filter(lambda num: len(num)!= 7 - len(mapping) - 2, arr))
 
     # c3 (c appeared 3 times) e2 f4 b3, found e and f, remove 2 amd 6 which only has e in their length
     counter = Counter(''.join(arr))
-    for key, val in counter.items():
-        if val == 2:
-            mapping['e'] = key
-        if val == 4:
-            mapping['f'] = key
+    mapping['e'] = list(filter(lambda kv: kv[1] == 2, counter.items()))[0][0]
+    mapping['f'] = list(filter(lambda kv: kv[1] == 4, counter.items()))[0][0]
 
     # the only one left of length 3 is 9, the common segment between 3 and 5 is f
     # remove 2 and 6
@@ -61,19 +55,14 @@ for line in data:
     sl = line.split("|") 
     ten, four = sl[0].split(), sl[1].split()
     mapping = findmappings(ten)
-    reverse = dict()
-    for key, val in mapping.items():
-        reverse[''.join(sorted(val))] = key
+    reverse = { ''.join(sorted(v)):k for k,v in mapping.items()}
     #print(reverse)
     out = 0
     for f in four:
         if len(f) in easy:
             i = easy[len(f)]
         else:
-            decoded = ""
-            for c in f:
-                if c in reverse:
-                    decoded += reverse[c]
+            decoded = map(lambda c: reverse[c], filter(lambda c: c in reverse, f))
             i = sd[''.join(sorted(decoded))]
         out = out*10 + i
     #print(out)
