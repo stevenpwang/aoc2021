@@ -50,17 +50,13 @@ for line in fold:
                     dots.add(newdot)
                     dots.remove(dot)
         maxy = int(ss[1])
-    print(dots)
-    print("dots",len(dots))
-
+    #print(dots)
+    #print("dots",len(dots))
 
 for y in range(maxy+1):
-    m = ['-'] *(maxx+1)
+    m = [' '] *(maxx+1)
     for x in range(maxx+1):
         dot = str(y)+','+str(x) 
         if dot in dots:
             m[x] = '*'
     print(m)
-
-
-
