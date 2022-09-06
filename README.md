@@ -1,6 +1,6 @@
 # aoc2021
 https://adventofcode.com/2021
-
+```
       --------Part 1---------   --------Part 2---------
 Day       Time    Rank  Score       Time    Rank  Score
  15   00:48:51    3292      0   01:05:03    2134      0
@@ -18,3 +18,4 @@ Day       Time    Rank  Score       Time    Rank  Score
   3       >24h  118475      0       >24h   93758      0
   2       >24h  132113      0       >24h  127688      0
   1       >24h  161908      0       >24h  145842      0
+  ```
